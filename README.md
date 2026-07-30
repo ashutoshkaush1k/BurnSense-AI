@@ -1,4 +1,4 @@
-# 🩹 BurnSense AI
+#  BurnSense AI
 
 **A dual-stage deep learning diagnostic assistant for classifying burn severity.**
 
@@ -8,22 +8,22 @@
 [![PyTorch](https://img.shields.io/badge/PyTorch-U--Net%20%2B%20ResNet18-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 
-> ⚠️ **Disclaimer:** BurnSense AI is a triage-guidance research project, **not** a substitute for professional medical care. If you or someone else has a serious burn, seek real medical attention immediately.
+>  **Disclaimer:** BurnSense AI is a triage-guidance research project, **not** a substitute for professional medical care. If you or someone else has a serious burn, seek real medical attention immediately.
 
 ---
 
-## 🤔 The "Why" — Explained Simply
+##  The "Why" — Explained Simply
 
 Diagnosing a burn from a photo is really two separate questions, and most models try to answer both at once with a single blurry guess. BurnSense AI splits the job into two specialists that do one thing extremely well:
 
-- 👀 **The Eyes (U-Net):** A segmentation model whose *only* job is to stare at the photo and answer "where, exactly, is the burn?" It draws a precise pixel-level boundary around the injury — nothing more, nothing less.
-- 🧠 **The Brain (ResNet18):** Once the eyes have found the burn, the brain's job is to look *specifically* at that region and reason about it: how deep does this go, how severe is it, is this 1st, 2nd, or 3rd degree?
+-  **The Eyes (U-Net):** A segmentation model whose *only* job is to stare at the photo and answer "where, exactly, is the burn?" It draws a precise pixel-level boundary around the injury — nothing more, nothing less.
+-  **The Brain (ResNet18):** Once the eyes have found the burn, the brain's job is to look *specifically* at that region and reason about it: how deep does this go, how severe is it, is this 1st, 2nd, or 3rd degree?
 
 This is the same division of labor a real clinician uses — first you *locate* the injury, then you *assess* it. By training one model per task instead of forcing one network to do both, each half gets to be really good at its narrow job, and the mistakes of "I detected something vaguely burn-shaped, so I'll just guess a random severity" become far less likely.
 
 ---
 
-## ✨ Core Innovations
+##  Core Innovations
 
 ### 1. Smart Context Padding
 A raw segmentation mask is often *too* precise — it crops out exactly the burn and nothing else. But real diagnosis needs context: how does the burn tissue compare to the healthy skin right next to it? BurnSense AI takes the U-Net's bounding box and **pads it out by 20%**, pulling in a ring of surrounding healthy tissue before handing the crop to the ResNet18 classifier. This extra context measurably reduces false positives and low-confidence guesses compared to feeding the classifier a tightly-cropped, context-free mask.
@@ -33,7 +33,7 @@ Every medical AI demo eventually gets shown a photo of a car, a pizza, or a cat 
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Layer | Technologies |
 |---|---|
@@ -42,7 +42,7 @@ Every medical AI demo eventually gets shown a photo of a car, a pizza, or a cat 
 
 ---
 
-## 🚀 Local Setup / Installation
+##  Local Setup / Installation
 
 **1. Clone the repository**
 ```bash
@@ -54,7 +54,7 @@ cd burnsense-ai
 ```bash
 pip install torch torchvision fastapi uvicorn python-multipart pillow numpy tqdm matplotlib opencv-python
 ```
-> 💡 If you have an NVIDIA GPU and want CUDA acceleration, install the matching `torch`/`torchvision` build from [pytorch.org](https://pytorch.org/get-started/locally/) instead of the default CPU wheels above.
+>  If you have an NVIDIA GPU and want CUDA acceleration, install the matching `torch`/`torchvision` build from [pytorch.org](https://pytorch.org/get-started/locally/) instead of the default CPU wheels above.
 
 **3. Add your trained model weights**
 Place your trained checkpoints in `checkpoints/`:
@@ -79,7 +79,7 @@ Then visit `http://localhost:8420` — upload a burn photo and watch the full pi
 
 ---
 
-## 👤 Author & Credits
+##  Author & Credits
 
 Built and maintained by **Ashutosh Kaushik**
 *MBA Tech in Computer Engineering, NMIMS*
