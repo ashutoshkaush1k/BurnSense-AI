@@ -1,0 +1,3 @@
+@echo off
+echo Starting MedicAssist AI Backend...
+python -m uvicorn api:app --reload

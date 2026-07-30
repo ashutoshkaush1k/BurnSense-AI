@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BurnSense AI — Diagnostic Assistant</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Inter', 'sans-serif'],
+          display: ['Outfit', 'sans-serif'],
+        },
+        keyframes: {
+          slideUpFade: {
+            from: { opacity: 0, transform: 'translateY(18px)' },
+            to: { opacity: 1, transform: 'translateY(0)' },
+          },
+          modalIn: {
+            from: { opacity: 0, transform: 'scale(0.96) translateY(8px)' },
+            to: { opacity: 1, transform: 'scale(1) translateY(0)' },
+          },
+        },
+        animation: {
+          slideUpFade: 'slideUpFade 0.4s cubic-bezier(0.16,1,0.3,1) both',
+          modalIn: 'modalIn 0.3s ease-out both',
+        },
+      },
+    },
+  };
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="min-h-screen bg-[var(--page-bg-light)] text-black dark:bg-[#121212] dark:text-white transition-colors duration-300">
+
+  <div id="cursor-spotlight" aria-hidden="true"></div>
+
+  <button id="theme-toggle" aria-label="Toggle dark mode"
+    class="fixed top-5 right-5 z-40 w-10 h-10 grid place-items-center rounded-full border border-neutral-300 dark:border-neutral-700 hover:scale-105 transition-all duration-[400ms] ease-in-out">
+    <svg class="w-4 h-4 hidden dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v1.5M12 19.5V21M4.22 4.22l1.06 1.06M18.72 18.72l1.06 1.06M3 12h1.5M19.5 12H21M4.22 19.78l1.06-1.06M18.72 5.28l1.06-1.06" stroke-linecap="round"/><circle cx="12" cy="12" r="4.5"/></svg>
+    <svg class="w-4 h-4 block dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+
+  <!-- ============ SCREEN 1: LANDING ============ -->
+  <main id="landing-screen" class="relative flex min-h-screen flex-col items-center justify-center px-6 py-24 transition-all duration-300 ease-out">
+    <div class="flex flex-col items-center text-center max-w-2xl animate-slideUpFade">
+      <div class="mb-6 w-16 h-16 rounded-2xl grid place-items-center border border-neutral-300 dark:border-neutral-700">
+        <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21s-7-4.35-9.5-9.03C.6 8.36 2.1 4.5 6 4.5c2.06 0 3.28 1.06 4 2.09.72-1.03 1.94-2.09 4-2.09 3.9 0 5.4 3.86 3.5 7.47C19 16.65 12 21 12 21z" stroke-linejoin="round"/></svg>
+      </div>
+
+      <p class="font-display text-xs tracking-[0.25em] uppercase text-neutral-500 dark:text-neutral-400 mb-3">Medical AI Diagnostics</p>
+      <h1 class="text-gradient font-display font-semibold text-4xl md:text-5xl leading-tight mb-5">
+        Understand any burn,<br class="hidden md:block" /> calmly and clearly.
+      </h1>
+      <p class="text-neutral-600 dark:text-neutral-400 text-base md:text-lg leading-relaxed mb-10">
+        Upload a photo and our debiased segmentation model, degree classifier, and severity engine
+        will walk you through what it finds — boundary, degree, healing outlook, and next steps.
+      </p>
+
+      <button id="start-diagnosis-btn"
+        class="btn-mint px-8 py-4 rounded-full font-display font-semibold hover:opacity-85 transition-all duration-[400ms] ease-in-out">
+        Start Diagnosis
+      </button>
+
+      <p class="mt-6 text-xs text-neutral-500">Not a substitute for professional medical care. For triage guidance only.</p>
+    </div>
+  </main>
+
+  <!-- ============ SCREEN 2: IMAGE-ONLY DIAGNOSTIC ============ -->
+  <main id="chat-screen" class="hidden opacity-0 relative flex-col min-h-screen transition-all duration-300 ease-out">
+    <header class="sticky top-0 z-30 flex items-center gap-3 px-4 md:px-6 py-4 bg-white/95 dark:bg-[#121212]/95 border-b border-neutral-200 dark:border-neutral-800">
+      <button id="back-btn" aria-label="Back to home"
+        class="w-9 h-9 grid place-items-center rounded-full border border-neutral-300 dark:border-neutral-700 hover:scale-105 transition-all duration-[400ms] ease-in-out">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15.75 19.5L8.25 12l7.5-7.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="w-9 h-9 rounded-xl grid place-items-center bg-black text-white dark:bg-white dark:text-black">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-9.5-9.03C.6 8.36 2.1 4.5 6 4.5c2.06 0 3.28 1.06 4 2.09.72-1.03 1.94-2.09 4-2.09 3.9 0 5.4 3.86 3.5 7.47C19 16.65 12 21 12 21z" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <p class="text-gradient font-display font-semibold leading-tight">BurnSense AI</p>
+        <p class="text-xs text-neutral-500 dark:text-neutral-400 leading-tight">Image-only burn diagnostics</p>
+      </div>
+    </header>
+
+    <div id="chat-messages" class="flex-1 overflow-y-auto px-4 pb-48 pt-10 max-w-3xl mx-auto w-full space-y-4"></div>
+
+    <!-- Flat upload pill: replaces the old chat input bar entirely -->
+    <div class="fixed bottom-0 inset-x-0 z-30 flex justify-center pb-8 px-4 pointer-events-none">
+      <button id="upload-pill"
+        class="btn-mint pointer-events-auto flex items-center gap-3 px-7 py-4 rounded-full hover:opacity-85 transition-all duration-[400ms] ease-in-out">
+        <span class="font-display font-medium text-sm">
+          Tap to Upload Burn Image <span class="opacity-60 font-normal">· or Drag &amp; Drop</span>
+        </span>
+      </button>
+    </div>
+    <input type="file" id="image-upload-input" accept="image/*" class="hidden" />
+  </main>
+
+  <!-- ============ ANALYTICS MODAL ============ -->
+  <div id="analytics-modal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
+    <div id="modal-backdrop" class="absolute inset-0 bg-black/50 transition-opacity duration-[400ms] ease-in-out"></div>
+
+    <div id="modal-panel" class="relative w-full max-w-2xl max-h-[88vh] overflow-y-auto rounded-3xl bg-white dark:bg-[#1E1E1E] border border-neutral-200 dark:border-neutral-800 p-6 md:p-8 animate-modalIn transition-all duration-[400ms] ease-in-out">
+      <div class="flex items-start justify-between mb-6">
+        <div>
+          <p class="font-display text-xs tracking-[0.2em] uppercase text-neutral-500 dark:text-neutral-400 mb-1">Detailed Analytics</p>
+          <h2 class="text-gradient font-display font-semibold text-2xl">Burn Severity Report</h2>
+        </div>
+        <button id="close-modal-btn" aria-label="Close analytics"
+          class="w-9 h-9 grid place-items-center rounded-full border border-neutral-300 dark:border-neutral-700 hover:scale-105 transition-all duration-[400ms] ease-in-out">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <!-- Gauge -->
+        <div class="rounded-3xl border border-neutral-200 dark:border-neutral-800 p-6 flex flex-col items-center justify-center">
+          <p class="text-xs uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-3">Burn Severity Index</p>
+          <div class="relative w-44 h-44">
+            <svg viewBox="0 0 140 140" class="w-full h-full -rotate-90">
+              <circle cx="70" cy="70" r="58" fill="none" stroke-width="12" class="stroke-neutral-200 dark:stroke-neutral-800" />
+              <circle id="gauge-ring" cx="70" cy="70" r="58" fill="none" stroke-width="12" stroke-linecap="round"
+                class="gauge-ring stroke-emerald-500" stroke-dasharray="364.42" stroke-dashoffset="364.42" />
+            </svg>
+            <div class="absolute inset-0 grid place-items-center flex-col">
+              <div class="flex flex-col items-center">
+                <span id="gauge-value" class="font-display font-bold text-4xl">0</span>
+                <span class="text-xs text-neutral-500 dark:text-neutral-400">/ 100</span>
+              </div>
+            </div>
+          </div>
+          <span id="gauge-risk-badge" class="mt-4 px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">Low risk</span>
+        </div>
+
+        <!-- Metric cards -->
+        <div class="flex flex-col gap-4">
+          <div class="rounded-3xl border border-neutral-200 dark:border-neutral-800 p-4 flex items-start gap-3">
+            <div class="w-9 h-9 shrink-0 grid place-items-center rounded-xl bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <p class="text-xs uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Infection Risk</p>
+              <p id="infection-risk-value" class="font-display font-semibold text-lg">—</p>
+            </div>
+          </div>
+
+          <div class="rounded-3xl border border-neutral-200 dark:border-neutral-800 p-4 flex items-start gap-3">
+            <div class="w-9 h-9 shrink-0 grid place-items-center rounded-xl bg-neutral-200 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <p class="text-xs uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Estimated Healing</p>
+              <p id="healing-days-value" class="font-display font-semibold text-lg">—</p>
+            </div>
+          </div>
+
+          <div class="rounded-3xl border border-neutral-200 dark:border-neutral-800 p-4 flex items-start gap-3">
+            <div class="w-9 h-9 shrink-0 grid place-items-center rounded-xl bg-neutral-200 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 12h6M9 16h6M9 8h6M6 4h12a1 1 0 011 1v14a1 1 0 01-1 1H6a1 1 0 01-1-1V5a1 1 0 011-1z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="flex-1">
+              <p class="text-xs uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-1">Action Plan</p>
+              <p id="action-plan-value" class="text-sm leading-relaxed">—</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Class probability breakdown -->
+      <div class="rounded-3xl border border-neutral-200 dark:border-neutral-800 p-5 mb-6">
+        <p class="text-xs uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-4">Degree Confidence Breakdown</p>
+        <div id="class-probs-bars" class="space-y-3"></div>
+      </div>
+
+      <!-- Healing timeline -->
+      <div class="rounded-3xl border border-neutral-200 dark:border-neutral-800 p-5">
+        <p class="text-xs uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-5">Healing Timeline</p>
+        <div class="relative h-2 rounded-full bg-neutral-200 dark:bg-neutral-800 mb-3">
+          <div id="timeline-fill" class="timeline-fill absolute inset-y-0 left-0 w-0 rounded-full bg-black dark:bg-white"></div>
+          <div class="absolute -top-1 left-0 w-4 h-4 rounded-full bg-white dark:bg-[#1E1E1E] border-2 border-black dark:border-white"></div>
+          <div id="timeline-end-marker" class="absolute -top-1 w-4 h-4 rounded-full bg-white dark:bg-[#1E1E1E] border-2 border-black dark:border-white transition-all duration-1000 ease-out" style="left: 0%"></div>
+        </div>
+        <div class="flex justify-between text-xs text-neutral-500 dark:text-neutral-400">
+          <span>Day 0 — Injury detected</span>
+          <span id="timeline-end-label">Est. recovery</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script src="app.js" defer></script>
+</body>
+</html>
