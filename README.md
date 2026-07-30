@@ -81,5 +81,5 @@ Then visit `http://localhost:8420` — upload a burn photo and watch the full pi
 
 ##  Author & Credits
 
-Built and maintained by **Ashutosh Kaushik**
+Built and maintained by **Ashutosh Kaushik and Mayank Phophaliya**
 *MBA Tech in Computer Engineering, NMIMS*
