@@ -65,6 +65,12 @@ data/degree_classification/
 # Generated export bundles
 *.zip
 
+# Generated demo / evaluation outputs (script-produced, not source assets)
+inference_result.png
+results_grid.png
+confusion_matrix.png
+evaluation_metrics.csv
+
 # Editor / OS
 .vscode/
 .idea/

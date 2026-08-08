@@ -262,10 +262,6 @@ const gaugeRiskBadge = document.getElementById("gauge-risk-badge");
 const infectionRiskValue = document.getElementById("infection-risk-value");
 const healingDaysValue = document.getElementById("healing-days-value");
 const actionPlanValue = document.getElementById("action-plan-value");
-const classProbsBars = document.getElementById("class-probs-bars");
-const timelineFill = document.getElementById("timeline-fill");
-const timelineEndMarker = document.getElementById("timeline-end-marker");
-const timelineEndLabel = document.getElementById("timeline-end-label");
 
 const GAUGE_CIRCUMFERENCE = 2 * Math.PI * 58;
 
@@ -274,26 +270,6 @@ const RISK_STYLES = {
   Medium: { ring: "stroke-amber-500", badge: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300" },
   High: { ring: "stroke-red-500", badge: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300" },
 };
-
-function renderClassProbBars(classProbs) {
-  classProbsBars.innerHTML = "";
-  Object.entries(classProbs).forEach(([key, prob]) => {
-    const row = document.createElement("div");
-    row.innerHTML = `
-      <div class="flex justify-between text-xs mb-1">
-        <span class="capitalize text-neutral-600 dark:text-neutral-400">${degreeLabel(key)}</span>
-        <span class="font-medium">${(prob * 100).toFixed(1)}%</span>
-      </div>
-      <div class="h-2 rounded-full bg-neutral-200 dark:bg-neutral-800 overflow-hidden">
-        <div class="h-full rounded-full bg-black dark:bg-white timeline-fill" style="width:0%"></div>
-      </div>
-    `;
-    classProbsBars.appendChild(row);
-    setTimeout(() => {
-      row.querySelector(".timeline-fill").style.width = `${(prob * 100).toFixed(1)}%`;
-    }, 20);
-  });
-}
 
 function openAnalyticsModal(result) {
   activeResult = result;
@@ -310,12 +286,6 @@ function openAnalyticsModal(result) {
   healingDaysValue.textContent = `${result.estimated_days} days`;
   actionPlanValue.textContent = result.action_plan;
 
-  renderClassProbBars(result.class_probs);
-
-  timelineFill.style.width = "0%";
-  timelineEndMarker.style.left = "0%";
-  timelineEndLabel.textContent = "Est. recovery";
-
   analyticsModal.classList.remove("hidden");
   analyticsModal.classList.add("flex");
 
@@ -324,10 +294,6 @@ function openAnalyticsModal(result) {
     const offset = GAUGE_CIRCUMFERENCE * (1 - result.bsi_score / 100);
     gaugeRing.setAttribute("stroke-dashoffset", offset.toFixed(2));
     animateCountUp(gaugeValue, result.bsi_score);
-
-    timelineFill.style.width = "100%";
-    timelineEndMarker.style.left = "100%";
-    timelineEndLabel.textContent = `Est. day ${Math.round(result.estimated_days)} — recovery`;
   }, 20);
 }
 

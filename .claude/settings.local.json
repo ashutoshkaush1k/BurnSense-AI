@@ -53,7 +53,16 @@
       "Bash(powershell -Command \"Stop-Process -Id 25968 -Force -ErrorAction SilentlyContinue\")",
       "Bash(mkdir -p frontend/_test_assets)",
       "Bash(cp \"data/real/images/img0_jpg.rf.6z7js5vY5drtqb7mfmPI.jpg\" frontend/_test_assets/burn_sample.jpg)",
-      "Bash(powershell -Command \"Stop-Process -Id 19328 -Force -ErrorAction SilentlyContinue\")"
+      "Bash(powershell -Command \"Stop-Process -Id 19328 -Force -ErrorAction SilentlyContinue\")",
+      "Bash(python -c \"import sklearn, seaborn\")",
+      "Bash(python -c \"import seaborn; print\\('seaborn ok', seaborn.__version__\\)\")",
+      "Bash(grep -E \"^\\(README|\\\\.gitignore\\)$\")",
+      "Bash(git check-ignore *)",
+      "Bash(git status *)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(rm -f results_grid.png inference_result.png colab_trainer.zip)",
+      "Bash(rm -rf __pycache__ data/__pycache__ evaluation/__pycache__ model/__pycache__ scripts/__pycache__ tests/__pycache__ training/__pycache__ .pytest_cache)",
+      "Bash(python -m pytest tests/ -q)"
     ]
   }
 }

@@ -6,6 +6,7 @@ OUTPUT_PATH = PROJECT_ROOT / "colab_trainer.zip"
 
 DATASET_SRC = PROJECT_ROOT / "data" / "degree_classification"
 TRAIN_SCRIPT_SRC = PROJECT_ROOT / "train_classifier.py"
+CHECKPOINT_SRC = PROJECT_ROOT / "checkpoints" / "burn_degree_classifier.pth"
 
 EXCLUDED_NAMES = {".venv", "__pycache__", ".pytest_cache"}
 
@@ -19,6 +20,8 @@ def main():
         raise FileNotFoundError(f"Dataset directory not found: {DATASET_SRC}")
     if not TRAIN_SCRIPT_SRC.exists():
         raise FileNotFoundError(f"train_classifier.py not found: {TRAIN_SCRIPT_SRC}")
+    if not CHECKPOINT_SRC.exists():
+        raise FileNotFoundError(f"Checkpoint not found: {CHECKPOINT_SRC}")
 
     dataset_files = [p for p in DATASET_SRC.rglob("*") if p.is_file() and not is_excluded(p.relative_to(DATASET_SRC))]
 
@@ -30,11 +33,13 @@ def main():
                 print(f"Added {i}/{len(dataset_files)} dataset files...")
 
         zf.write(TRAIN_SCRIPT_SRC, "train_classifier.py")
+        zf.write(CHECKPOINT_SRC, Path("checkpoints") / CHECKPOINT_SRC.name)
 
     size_mb = OUTPUT_PATH.stat().st_size / (1024 * 1024)
     print(f"\nSuccess: created {OUTPUT_PATH} ({size_mb:.2f} MB)")
     print(f"  dataset/           {len(dataset_files)} files")
     print("  train_classifier.py")
+    print(f"  checkpoints/{CHECKPOINT_SRC.name}")
 
 
 if __name__ == "__main__":

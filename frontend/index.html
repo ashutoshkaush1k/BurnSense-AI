@@ -55,7 +55,7 @@
   <main id="landing-screen" class="relative flex min-h-screen flex-col items-center justify-center px-6 py-24 transition-all duration-300 ease-out">
     <div class="flex flex-col items-center text-center max-w-2xl animate-slideUpFade">
       <div class="mb-6 w-16 h-16 rounded-2xl grid place-items-center border border-neutral-300 dark:border-neutral-700">
-        <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21s-7-4.35-9.5-9.03C.6 8.36 2.1 4.5 6 4.5c2.06 0 3.28 1.06 4 2.09.72-1.03 1.94-2.09 4-2.09 3.9 0 5.4 3.86 3.5 7.47C19 16.65 12 21 12 21z" stroke-linejoin="round"/></svg>
+        <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke-linejoin="round"/></svg>
       </div>
 
       <p class="font-display text-xs tracking-[0.25em] uppercase text-neutral-500 dark:text-neutral-400 mb-3">Medical AI Diagnostics</p>
@@ -84,7 +84,7 @@
         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15.75 19.5L8.25 12l7.5-7.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <div class="w-9 h-9 rounded-xl grid place-items-center bg-black text-white dark:bg-white dark:text-black">
-        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-9.5-9.03C.6 8.36 2.1 4.5 6 4.5c2.06 0 3.28 1.06 4 2.09.72-1.03 1.94-2.09 4-2.09 3.9 0 5.4 3.86 3.5 7.47C19 16.65 12 21 12 21z" stroke-linejoin="round"/></svg>
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke-linejoin="round"/></svg>
       </div>
       <div>
         <p class="text-gradient font-display font-semibold leading-tight">BurnSense AI</p>
@@ -161,6 +161,7 @@
             <div>
               <p class="text-xs uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Estimated Healing</p>
               <p id="healing-days-value" class="font-display font-semibold text-lg">—</p>
+              <p class="text-[11px] text-neutral-400 dark:text-neutral-500 mt-1 leading-snug">*Estimates are based on general clinical standards and may vary based on individual physiological conditions.</p>
             </div>
           </div>
 
@@ -173,26 +174,6 @@
               <p id="action-plan-value" class="text-sm leading-relaxed">—</p>
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- Class probability breakdown -->
-      <div class="rounded-3xl border border-neutral-200 dark:border-neutral-800 p-5 mb-6">
-        <p class="text-xs uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-4">Degree Confidence Breakdown</p>
-        <div id="class-probs-bars" class="space-y-3"></div>
-      </div>
-
-      <!-- Healing timeline -->
-      <div class="rounded-3xl border border-neutral-200 dark:border-neutral-800 p-5">
-        <p class="text-xs uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-5">Healing Timeline</p>
-        <div class="relative h-2 rounded-full bg-neutral-200 dark:bg-neutral-800 mb-3">
-          <div id="timeline-fill" class="timeline-fill absolute inset-y-0 left-0 w-0 rounded-full bg-black dark:bg-white"></div>
-          <div class="absolute -top-1 left-0 w-4 h-4 rounded-full bg-white dark:bg-[#1E1E1E] border-2 border-black dark:border-white"></div>
-          <div id="timeline-end-marker" class="absolute -top-1 w-4 h-4 rounded-full bg-white dark:bg-[#1E1E1E] border-2 border-black dark:border-white transition-all duration-1000 ease-out" style="left: 0%"></div>
-        </div>
-        <div class="flex justify-between text-xs text-neutral-500 dark:text-neutral-400">
-          <span>Day 0 — Injury detected</span>
-          <span id="timeline-end-label">Est. recovery</span>
         </div>
       </div>
     </div>
